@@ -128,8 +128,6 @@ def train(arch, model, dataloaders, dataset_size, criterion, optimizer, num_epoc
                 model.train()
             else:
                 model.eval()
-            if phase == 'val' and epoch % 2 != 0:
-                continue
             running_loss = 0
             accuracy = 0
             for features, targets in dataloaders[phase]:

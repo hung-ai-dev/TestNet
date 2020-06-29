@@ -164,6 +164,7 @@ if __name__ == "__main__":
     print(model)
     model._fc = nn.Linear(1280, 42)
     model._swish = MemoryEfficientSwish()
+    model.load_state_dict(torch.load('./model_efficient-1-b0.pt'))
 
     data_dir = './dataset/train'
     train_dir = data_dir + '/train'

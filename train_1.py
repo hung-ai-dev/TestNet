@@ -149,14 +149,14 @@ def train(arch, model, dataloaders, dataset_size, criterion, optimizer, num_epoc
                     loss.backward()
                     optimizer.step()
 
-        print('{} Loss: {:.4f} Acc: {:.4f}'.format(
-            phase, running_loss / dataset_size[phase], accuracy.double() / dataset_size[phase]))
-        if phase == 'val' and running_loss <= valid_loss_min:
-            print('Validation loss decreased ({:.6f} --> {:.6f}).  Saving model ...'.format(
-                valid_loss_min,
-                running_loss))
-            torch.save(model.state_dict(), 'model_' + arch + '.pt')
-            valid_loss_min = running_loss
+            print('{} Loss: {:.4f} Acc: {:.4f}'.format(
+                phase, running_loss / dataset_size[phase], accuracy.double() / dataset_size[phase]))
+            if phase == 'val' and running_loss <= valid_loss_min:
+                print('Validation loss decreased ({:.6f} --> {:.6f}).  Saving model ...'.format(
+                    valid_loss_min,
+                    running_loss))
+                torch.save(model.state_dict(), 'model_' + arch + '.pt')
+                valid_loss_min = running_loss
     return model, valid_loss_min
 
 if __name__ == "__main__":

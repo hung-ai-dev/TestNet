@@ -122,7 +122,7 @@ def train(arch, model, dataloaders, dataset_size, criterion, optimizer, num_epoc
     
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch, num_epochs), '\n-------------------------------')
-        for phase in ['train', 'val']:
+        for phase in ['val', 'train']:
             if phase == 'train':
                 model.train()
             else:

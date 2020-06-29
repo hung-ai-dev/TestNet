@@ -160,11 +160,13 @@ def train(arch, model, dataloaders, dataset_size, criterion, optimizer, num_epoc
     return model, valid_loss_min
 
 if __name__ == "__main__":
-    model = efficientnet_b0(True)
+    model = tf_efficientnet_b1_ns(True)
     print(model)
     model.classifier = nn.Linear(1280, 42)
-    model.load_state_dict(torch.load('./model_efficient-2-b0.pt'))
-    print(model)
+    # model.load_state_dict(torch.load('./model_efficient-2-b0.pt'))
+    # print(model)
+    for param in model.features.parameters():
+        param.requires_grad = True
 
     data_dir = './dataset/train'
     train_dir = data_dir + '/train'

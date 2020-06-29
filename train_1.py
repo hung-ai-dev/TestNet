@@ -122,41 +122,44 @@ def train(arch, model, dataloaders, dataset_size, criterion, optimizer, num_epoc
     
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch, num_epochs), '\n-------------------------------')
-        
-        for phase in ['train', 'val']:
+        phase = 'train'
+        if epoch % 5 == 0:
+            phase = 'val'
+
+        if phase == 'train':
+            model.train()
+        else:
+            model.eval()
+        running_loss = 0
+        accuracy = 0
+        for features, targets in dataloaders[phase]:
+            features = features.to(device)
+            targets = targets.to(device)
+            
+            optimizer.zero_grad()
+            outputs = model(features)
+            _, preds = torch.max(outputs, 1)
+            accuracy += torch.sum(preds == targets.data)
+            # print(targets.size())
+            # print(outputs.size())
+            loss = criterion(outputs, targets)
+            # print('----Loss', loss)
+            # print('----Features', features.size())
+            running_loss += loss.item() * features.size(0)
+            # print('----Running loss', running_loss)
+            
             if phase == 'train':
-                model.train()
-            else:
-                model.eval()
-            running_loss = 0
-            accuracy = 0
-            for features, targets in dataloaders[phase]:
-                features = features.to(device)
-                targets = targets.to(device)
+                loss.backward()
+                optimizer.step()
                 
-                optimizer.zero_grad()
-                outputs = model(features)
-                _, preds = torch.max(outputs, 1)
-                accuracy += torch.sum(preds == targets.data)
-                # print(targets.size())
-                # print(outputs.size())
-                loss = criterion(outputs, targets)
-                # print('----Loss', loss)
-                # print('----Features', features.size())
-                running_loss += loss.item() * features.size(0)
-                # print('----Running loss', running_loss)
-                
-                if phase == 'train':
-                    loss.backward()
-                    optimizer.step()
-            print('{} Loss: {:.4f} Acc: {:.4f}'.format(
-                phase, running_loss / dataset_size[phase], accuracy.double() / dataset_size[phase]))
-            if phase == 'val' and running_loss <= valid_loss_min:
-                print('Validation loss decreased ({:.6f} --> {:.6f}).  Saving model ...'.format(
-                    valid_loss_min,
-                    running_loss))
-                torch.save(model.state_dict(), 'model_' + arch + '.pt')
-                valid_loss_min = running_loss
+        print('{} Loss: {:.4f} Acc: {:.4f}'.format(
+            phase, running_loss / dataset_size[phase], accuracy.double() / dataset_size[phase]))
+        if phase == 'val' and running_loss <= valid_loss_min:
+            print('Validation loss decreased ({:.6f} --> {:.6f}).  Saving model ...'.format(
+                valid_loss_min,
+                running_loss))
+            torch.save(model.state_dict(), 'model_' + arch + '.pt')
+            valid_loss_min = running_loss
     return model, valid_loss_min
 
 if __name__ == "__main__":

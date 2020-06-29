@@ -162,6 +162,7 @@ if __name__ == "__main__":
     model = efficientnet_b0(True)
     print(model)
     model.classifier = nn.Linear(1280, 42)
+    print(model)
 
     data_dir = './dataset/train'
     train_dir = data_dir + '/train'

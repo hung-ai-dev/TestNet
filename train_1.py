@@ -122,35 +122,32 @@ def train(arch, model, dataloaders, dataset_size, criterion, optimizer, num_epoc
     
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch, num_epochs), '\n-------------------------------')
-        phase = 'train'
-        if epoch % 5 == 0:
-            phase = 'val'
-
-        if phase == 'train':
-            model.train()
-        else:
-            model.eval()
-        running_loss = 0
-        accuracy = 0
-        for features, targets in dataloaders[phase]:
-            features = features.to(device)
-            targets = targets.to(device)
-            
-            optimizer.zero_grad()
-            outputs = model(features)
-            _, preds = torch.max(outputs, 1)
-            accuracy += torch.sum(preds == targets.data)
-            # print(targets.size())
-            # print(outputs.size())
-            loss = criterion(outputs, targets)
-            # print('----Loss', loss)
-            # print('----Features', features.size())
-            running_loss += loss.item() * features.size(0)
-            # print('----Running loss', running_loss)
-            
+        for phase in ['train', 'val']:
             if phase == 'train':
-                loss.backward()
-                optimizer.step()
+                model.train()
+            else:
+                model.eval()
+            running_loss = 0
+            accuracy = 0
+            for features, targets in dataloaders[phase]:
+                features = features.to(device)
+                targets = targets.to(device)
+                
+                optimizer.zero_grad()
+                outputs = model(features)
+                _, preds = torch.max(outputs, 1)
+                accuracy += torch.sum(preds == targets.data)
+                # print(targets.size())
+                # print(outputs.size())
+                loss = criterion(outputs, targets)
+                # print('----Loss', loss)
+                # print('----Features', features.size())
+                running_loss += loss.item() * features.size(0)
+                # print('----Running loss', running_loss)
+                
+                if phase == 'train':
+                    loss.backward()
+                    optimizer.step()
 
         print('{} Loss: {:.4f} Acc: {:.4f}'.format(
             phase, running_loss / dataset_size[phase], accuracy.double() / dataset_size[phase]))
@@ -203,8 +200,8 @@ if __name__ == "__main__":
 
     # TODO: Using the image datasets and the trainforms, define the dataloaders
     dataloaders = {
-        "train": torch.utils.data.DataLoader(image_datasets['train'], batch_size=32, shuffle=True, pin_memory=True, num_workers=8),
-        "val": torch.utils.data.DataLoader(image_datasets['val'], batch_size=8, shuffle=True, pin_memory=True, num_workers=8)
+        "train": torch.utils.data.DataLoader(image_datasets['train'], batch_size=64, shuffle=True, pin_memory=True, num_workers=8),
+        "val": torch.utils.data.DataLoader(image_datasets['val'], batch_size=4, shuffle=True, pin_memory=True, num_workers=8)
     }
 
     dataset_size = {

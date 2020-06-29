@@ -200,8 +200,8 @@ if __name__ == "__main__":
 
     # TODO: Using the image datasets and the trainforms, define the dataloaders
     dataloaders = {
-        "train": torch.utils.data.DataLoader(image_datasets['train'], batch_size=32, shuffle=True, pin_memory=True, num_workers=8),
-        "val": torch.utils.data.DataLoader(image_datasets['val'], batch_size=8, shuffle=True, pin_memory=True, num_workers=8)
+        "train": torch.utils.data.DataLoader(image_datasets['train'], batch_size=64, shuffle=True, pin_memory=True, num_workers=8),
+        "val": torch.utils.data.DataLoader(image_datasets['val'], batch_size=4, shuffle=True, pin_memory=True, num_workers=8)
     }
 
     dataset_size = {

@@ -143,7 +143,7 @@ def train(arch, model, dataloaders, dataset_size, criterion, optimizer, num_epoc
                 # print('----Loss', loss)
                 # print('----Features', features.size())
                 running_loss += loss.item() * features.size(0)
-                print('----Running loss', running_loss)
+                # print('----Running loss', running_loss)
                 
                 if phase == 'train':
                     loss.backward()
@@ -159,9 +159,9 @@ def train(arch, model, dataloaders, dataset_size, criterion, optimizer, num_epoc
     return model, valid_loss_min
 
 if __name__ == "__main__":
-    model = EfficientNet.from_pretrained('efficientnet-b5')
+    model = EfficientNet.from_pretrained('efficientnet-b0')
     print(model)
-    model._fc = nn.Linear(2048, 42)
+    model._fc = nn.Linear(1280, 42)
     model._swish = MemoryEfficientSwish()
     model.cuda()
 
@@ -201,8 +201,8 @@ if __name__ == "__main__":
 
     # TODO: Using the image datasets and the trainforms, define the dataloaders
     dataloaders = {
-        "train": torch.utils.data.DataLoader(image_datasets['train'], batch_size=8, shuffle=True),
-        "val": torch.utils.data.DataLoader(image_datasets['val'], batch_size=1, shuffle=True)
+        "train": torch.utils.data.DataLoader(image_datasets['train'], batch_size=64, shuffle=True, pin_memory=True, num_workers=8),
+        "val": torch.utils.data.DataLoader(image_datasets['val'], batch_size=1, shuffle=True, pin_memory=True, num_workers=8)
     }
 
     dataset_size = {

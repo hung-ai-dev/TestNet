@@ -20,6 +20,7 @@ Pretrained model:
     - efficientnet_b7
 
 Specify model: __model = tf_efficientnet_b4_ns(True)__
+
 Specify data path:
 - train_set = ProductImageLoader(__image_folder__, __train_csv_file__, 'train')
 - val_set = ProductImageLoader(__image_folder__, __val_csv_file__, 'val')

@@ -151,7 +151,7 @@ def train(arch, model, dataloaders, dataset_size, criterion, optimizer, num_epoc
             if phase == 'train':
                 loss.backward()
                 optimizer.step()
-                
+
         print('{} Loss: {:.4f} Acc: {:.4f}'.format(
             phase, running_loss / dataset_size[phase], accuracy.double() / dataset_size[phase]))
         if phase == 'val' and running_loss <= valid_loss_min:
@@ -203,7 +203,7 @@ if __name__ == "__main__":
 
     # TODO: Using the image datasets and the trainforms, define the dataloaders
     dataloaders = {
-        "train": torch.utils.data.DataLoader(image_datasets['train'], batch_size=64, shuffle=True, pin_memory=True, num_workers=8),
+        "train": torch.utils.data.DataLoader(image_datasets['train'], batch_size=32, shuffle=True, pin_memory=True, num_workers=8),
         "val": torch.utils.data.DataLoader(image_datasets['val'], batch_size=8, shuffle=True, pin_memory=True, num_workers=8)
     }
 

@@ -118,6 +118,7 @@ def train(arch, model, dataloaders, dataset_size, criterion, optimizer, num_epoc
     device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
     print(device)
     model = model.to(device)
+    criterion = criterion.to(device)
     
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch, num_epochs), '\n-------------------------------')

@@ -165,7 +165,7 @@ if __name__ == "__main__":
     model.classifier = nn.Linear(1280, 42)
     # model.load_state_dict(torch.load('./model_efficient-2-b0.pt'))
     # print(model)
-    for param in model.features.parameters():
+    for param in model.parameters():
         param.requires_grad = True
 
     data_dir = './dataset/train'

@@ -115,7 +115,7 @@ class EfficientNetCenterCrop:
         return img.crop((crop_left, crop_top, crop_left + crop_width, crop_top + crop_height))
 
 def train(arch, model, dataloaders, dataset_size, criterion, optimizer, num_epochs, valid_loss_min = np.Inf):
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
     print(device)
     model = model.to(device)
     
@@ -211,4 +211,4 @@ if __name__ == "__main__":
 
     criterion = nn.CrossEntropyLoss()
     optimizer = RAdam(model.parameters())
-    train('efficient-b0', model, dataloaders, dataset_size, criterion, optimizer, 10)
+    train('efficient-2-b0', model, dataloaders, dataset_size, criterion, optimizer, 10)

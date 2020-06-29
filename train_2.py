@@ -212,4 +212,4 @@ if __name__ == "__main__":
 
     criterion = nn.CrossEntropyLoss()
     optimizer = RAdam(model.parameters())
-    train('efficient-2-b0', model, dataloaders, dataset_size, criterion, optimizer, 10)
+    train('efficient-2-b0', model, dataloaders, dataset_size, criterion, optimizer, 100)

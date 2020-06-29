@@ -125,4 +125,5 @@ examples/imagenet/run.sh
 
 
 .vscode
-dataset
+dataset*
+*.pt

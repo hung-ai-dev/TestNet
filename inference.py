@@ -47,4 +47,4 @@ if __name__ == "__main__":
         # break
     print(res)
     df = pd.DataFrame(res)
-    df.to_csv("data.csv", index=False)
+    df.to_csv("res.csv", index=False)

@@ -11,6 +11,8 @@ from torchvision import transforms, models
 import torch.nn.functional as F
 from torch.autograd import Variable
 
+from tqdm import tqdm
+
 from efficientnet_pytorch.radam import RAdam
 from timm.models.efficientnet import *
 from efficientnet_pytorch.utils import (
@@ -53,7 +55,7 @@ def train(arch, model, dataloaders, dataset_size, criterion, optimizer, num_epoc
                 model.eval()
             running_loss = 0
             accuracy = 0
-            for features, targets in dataloaders[phase]:
+            for features, targets in tqdm(dataloaders[phase]):
                 features = features.to(device)
                 targets = targets.to(device)
                 
@@ -78,21 +80,21 @@ def train(arch, model, dataloaders, dataset_size, criterion, optimizer, num_epoc
     return model, valid_loss_min
 
 if __name__ == "__main__":
-    model = tf_efficientnet_b5_ns(True)
+    model = tf_efficientnet_b7_ns(True)
     print(model)
-    model.classifier = nn.Linear(2048, 42)
+    model.classifier = nn.Linear(2560, 42)
     # model.load_state_dict(torch.load('./model_efficient-2-b0.pt'))
     # print(model)
     for param in model.parameters():
         param.requires_grad = True
 
-    train_set = ProductImageLoader('./dataset/train', './dataset/train/fold0_train.csv', 'train')
-    val_set = ProductImageLoader('./dataset/train', './dataset/train/fold0_test.csv', 'val')
+    train_set = ProductImageLoader(None, './data/fold0_train.csv', 'train')
+    val_set = ProductImageLoader(None, './data/fold0_test.csv', 'val')
 
     # TODO: Using the image datasets and the trainforms, define the dataloaders
     dataloaders = {
-        "train": torch.utils.data.DataLoader(train_set, batch_size=32, shuffle=True, pin_memory=False, num_workers=8),
-        "val": torch.utils.data.DataLoader(val_set, batch_size=2, shuffle=True, pin_memory=False, num_workers=8)
+        "train": torch.utils.data.DataLoader(train_set, batch_size=32, shuffle=True, pin_memory=False, num_workers=16),
+        "val": torch.utils.data.DataLoader(val_set, batch_size=32, shuffle=False, pin_memory=False, num_workers=16)
     }
 
     dataset_size = {

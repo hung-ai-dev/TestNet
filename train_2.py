@@ -1,3 +1,4 @@
+import argparse
 import os
 import sys
 
@@ -49,6 +50,7 @@ def train(
     dataset_size,
     criterion,
     optimizer,
+    scheduler,
     num_epochs,
     valid_loss_min=np.Inf,
 ):
@@ -83,6 +85,7 @@ def train(
                 if phase == "train":
                     loss.backward()
                     optimizer.step()
+                    scheduler.step()
             print(
                 "{} Loss: {:.4f} Acc: {:.4f}".format(
                     phase,
@@ -111,6 +114,12 @@ if __name__ == "__main__":
     elif arch == "B7NS":
         model = tf_efficientnet_b7_ns(True)
         model.classifier = nn.Linear(2560, 42)
+    elif arch == "B1NS":
+        model = tf_efficientnet_b1_ns(True)
+        model.classifier = nn.Linear(1280, 42)
+    elif arch == "B5NS":
+        model = tf_efficientnet_b5_ns(True)
+        model.classifier = nn.Linear(2048, 42)
 
     print(model)
 
@@ -144,5 +153,5 @@ if __name__ == "__main__":
 
     criterion = nn.CrossEntropyLoss()
     optimizer = RAdam(model.parameters(), lr=1e-4)
-    train(arch, model, dataloaders, dataset_size, criterion, optimizer, 100)
-
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, 2000)
+    train(arch, model, dataloaders, dataset_size, criterion, optimizer, scheduler, 100)

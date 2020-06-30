@@ -6,6 +6,7 @@
 # Github repo: https://github.com/lukemelas/EfficientNet-PyTorch
 # With adjustments and added comments by workingcoder (github username).
 
+import random
 import re
 import math
 import collections

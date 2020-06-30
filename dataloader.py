@@ -55,7 +55,7 @@ class ProductImageLoader(data.Dataset):
         return img
 
     def __getitem__(self, index):
-        img = Image.open(self.files[index])
+        img = Image.open(self.files[index]).convert('RGB')
         lbl = self.classes[index]
 
         img = self.__transform(img)

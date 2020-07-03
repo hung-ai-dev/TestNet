@@ -78,7 +78,7 @@ def train(
     num_epochs,
     valid_loss_min=np.Inf,
 ):
-    device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    device = "cuda" if torch.cuda.is_available() else "cpu"
     print(device)
     model = model.to(device)
     # criterion = criterion.to(device)

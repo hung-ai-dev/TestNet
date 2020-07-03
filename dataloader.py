@@ -35,7 +35,8 @@ class ProductImageLoader(data.Dataset):
 
         if self.split == 'val':
             tfms = transforms.Compose([
-                            transforms.Resize(image_size), transforms.CenterCrop(image_size), 
+                            transforms.Resize(sized_size), 
+                            transforms.CenterCrop(image_size), 
                             transforms.ToTensor(),
                             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
         else:
@@ -48,6 +49,7 @@ class ProductImageLoader(data.Dataset):
                                 contrast=0.4,
                                 saturation=0.4,
                             ),
+                            transforms.RandomRotation(10, resample=Image.BILINEAR),
                             transforms.ToTensor(),
                             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 

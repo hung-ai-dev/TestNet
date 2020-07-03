@@ -43,6 +43,17 @@ _IMAGENET_PCA = {
 }
 
 
+def DMI_loss(output, target):
+    num_classes = 42
+
+    outputs = F.softmax(output, dim=1)
+    targets = target.reshape(target.size(0), 1).cpu()
+    y_onehot = torch.FloatTensor(target.size(0), num_classes).zero_()
+    y_onehot.scatter_(1, targets, 1)
+    y_onehot = y_onehot.transpose(0, 1).cuda()
+    mat = y_onehot @ outputs
+    return -1.0 * torch.log(torch.abs(torch.det(mat.float())) + 0.001)
+
 def train(
     arch,
     model,
@@ -57,7 +68,7 @@ def train(
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
     print(device)
     model = model.to(device)
-    criterion = criterion.to(device)
+    # criterion = criterion.to(device)
 
     for epoch in range(num_epochs):
         print(
@@ -103,7 +114,6 @@ def train(
                 valid_loss_min = running_loss
     return model, valid_loss_min
 
-
 if __name__ == "__main__":
     arch = sys.argv[1]
     batch_size = int(sys.argv[2])
@@ -128,8 +138,8 @@ if __name__ == "__main__":
     for param in model.parameters():
         param.requires_grad = True
 
-    train_set = ProductImageLoader(None, "./data/fold0_train.csv", "train")
-    val_set = ProductImageLoader(None, "./data/fold0_test.csv", "val")
+    train_set = ProductImageLoader(None, "./dataset/train/fold0_train.csv", "train")
+    val_set = ProductImageLoader(None, "./dataset/train/fold0_test.csv", "val")
 
     # TODO: Using the image datasets and the trainforms, define the dataloaders
     dataloaders = {
@@ -151,7 +161,7 @@ if __name__ == "__main__":
 
     dataset_size = {"train": len(train_set), "val": len(val_set)}
 
-    criterion = nn.CrossEntropyLoss()
+    criterion = DMI_loss #nn.CrossEntropyLoss()
     optimizer = RAdam(model.parameters(), lr=1e-4)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, 2000)
     train(arch, model, dataloaders, dataset_size, criterion, optimizer, scheduler, 100)

@@ -1,3 +1,5 @@
+This src is used for Kaggle-Shopee Code League https://www.kaggle.com/competitions/shopee-product-detection-open
+
 Pretrained model:
 - Efficient noisy student
     - tf_efficientnet_b0_ns
